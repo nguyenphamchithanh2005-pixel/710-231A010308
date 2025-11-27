@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 3: Đoán Số</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; background: #282c34; color: white; height: 100vh; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+        .box { background: #444; padding: 30px; border-radius: 10px; display: inline-block; z-index: 10; }
+        input { padding: 10px; margin: 10px 0; width: 60%; text-align: center; }
+        button { padding: 10px 20px; background: #61dafb; border: none; cursor: pointer; font-weight: bold; }
+        .confetti { position: absolute; width: 10px; height: 10px; background: red; animation: fall linear forwards; }
+        @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>Game Đoán Số (1-100)</h2>
+        <input type="number" id="guess" placeholder="Số của bạn...">
+        <br>
+        <button onclick="check()">Đoán Ngay</button>
+        <p id="msg" style="font-weight:bold; height:20px;"></p>
+        <p>Số lần thử: <span id="cnt">0</span></p>
+    </div>
+    <div style="margin-top:20px;"><a href="index.html" style="color:#ccc;">Quay lại</a></div>
+
+    <script>
+        /* Logic: Math.random() * 100 + 1. Check input. Animation DOM. */
+        let target = Math.floor(Math.random() * 100) + 1;
+        let count = 0;
+        
+        function check() {
+            let val = parseInt(document.getElementById('guess').value);
+            let msg = document.getElementById('msg');
+            
+            if(isNaN(val) || val < 1 || val > 100) { msg.innerText = "Nhập từ 1-100!"; msg.style.color = "yellow"; return; }
+            
+            count++;
+            document.getElementById('cnt').innerText = count;
+
+            if(val === target) {
+                msg.innerText = "CHÍNH XÁC!"; msg.style.color = "#0f0";
+                for(let i=0; i<50; i++) spawnConfetti();
+            } else {
+                msg.innerText = val < target ? "Thấp quá!" : "Cao quá!";
+                msg.style.color = "orange";
+            }
+        }
+
+        function spawnConfetti() {
+            let d = document.createElement('div');
+            d.className = 'confetti';
+            d.style.left = Math.random() * 100 + 'vw';
+            d.style.top = '-10px';
+            d.style.background = `hsl(${Math.random()*360}, 100%, 50%)`;
+            d.style.animationDuration = Math.random() * 2 + 2 + 's';
+            document.body.appendChild(d);
+            setTimeout(() => d.remove(), 4000);
+        }
+    </script>
+</body>
+</html>

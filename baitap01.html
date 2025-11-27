@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 1: Carousel</title>
+    <style>
+        body { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background: #333; font-family: sans-serif; }
+        .carousel { position: relative; width: 80%; max-width: 600px; height: 350px; overflow: hidden; border-radius: 10px; }
+        .track { display: flex; transition: transform 0.5s ease-in-out; height: 100%; }
+        .track img { width: 100%; height: 100%; object-fit: cover; flex-shrink: 0; }
+        .btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; padding: 10px 15px; cursor: pointer; font-size: 20px; }
+        .prev { left: 10px; } .next { right: 10px; }
+        @media(max-width: 600px) { .carousel { height: 200px; width: 95%; } }
+        .home { margin-top: 20px; color: #fff; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="carousel">
+        <div class="track" id="track">
+            <!-- Ảnh mẫu -->
+            <img src="/images/anh1.jpg" alt="1">
+            <img src="/images/anh2.jpg" alt="2">
+            <img src="/images/anh3.jpg" alt="3">
+            <img src="/images/anh4.jpg" alt="4">
+            <img src="/images/anh5.jpg" alt="5">
+            <img src="/images/anh6.jpg" alt="6">
+        </div>
+        <button class="btn prev" id="prevBtn">&#10094;</button>
+        <button class="btn next" id="nextBtn">&#10095;</button>
+    </div>
+    <a href="index.html" class="home">Quay lại Trang chủ</a>
+
+    <script>
+        /* Logic: Dùng biến index theo dõi vị trí. Kiểm tra biên (0 và length-1) để loop. */
+        let index = 0;
+        const track = document.getElementById('track');
+        const count = document.querySelectorAll('.track img').length;
+
+        function update() { track.style.transform = `translateX(-${index * 100}%)`; }
+        function next() { index = (index >= count - 1) ? 0 : index + 1; update(); }
+        function prev() { index = (index <= 0) ? count - 1 : index - 1; update(); }
+
+        let timer = setInterval(next, 3000); // Auto 3s
+        
+        const reset = () => { clearInterval(timer); timer = setInterval(next, 3000); };
+        document.getElementById('nextBtn').onclick = () => { next(); reset(); };
+        document.getElementById('prevBtn').onclick = () => { prev(); reset(); };
+    </script>
+</body>
+</html>

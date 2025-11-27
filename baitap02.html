@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 2: Todo List</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; padding-top: 50px; background: #eee; }
+        .app { width: 400px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .input-group { display: grid; grid-template-columns: 1fr 60px; gap: 10px; margin-bottom: 20px; }
+        input { padding: 10px; border: 1px solid #ccc; }
+        button { cursor: pointer; border: none; padding: 5px 10px; }
+        #addBtn { background: #28a745; color: white; }
+        ul { list-style: none; padding: 0; }
+        li { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; align-items: center; }
+        li.done span { text-decoration: line-through; color: #999; }
+        .del-btn { background: #dc3545; color: white; border-radius: 3px; margin-left: 5px; }
+        .edit-btn { background: #ffc107; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <h2 style="text-align:center;">Todo List</h2>
+        <div class="input-group">
+            <input type="text" id="inp" placeholder="Nhập việc...">
+            <button id="addBtn">Thêm</button>
+        </div>
+        <ul id="list"></ul>
+        <div style="text-align:center; margin-top:20px;"><a href="index.html">Quay lại</a></div>
+    </div>
+
+    <script>
+        /* Logic: State mảng todos lưu LocalStorage. Render mỗi khi data đổi. */
+        let todos = JSON.parse(localStorage.getItem('tasks')) || [];
+        const inp = document.getElementById('inp');
+        const list = document.getElementById('list');
+
+        function save() { localStorage.setItem('tasks', JSON.stringify(todos)); render(); }
+        
+        function render() {
+            list.innerHTML = '';
+            todos.forEach((t, i) => {
+                list.innerHTML += `<li class="${t.done?'done':''}">
+                    <span onclick="toggle(${i})" style="flex-grow:1; cursor:pointer;">${t.text}</span>
+                    <div>
+                        <button class="edit-btn" onclick="edit(${i})">Sửa</button>
+                        <button class="del-btn" onclick="del(${i})">Xóa</button>
+                    </div>
+                </li>`;
+            });
+        }
+
+        document.getElementById('addBtn').onclick = () => {
+            if(!inp.value.trim()) return;
+            todos.push({text: inp.value, done: false});
+            inp.value = ''; save();
+        };
+
+        window.del = (i) => { todos.splice(i, 1); save(); };
+        window.toggle = (i) => { todos[i].done = !todos[i].done; save(); };
+        window.edit = (i) => {
+            let n = prompt("Sửa:", todos[i].text);
+            if(n) { todos[i].text = n; save(); }
+        };
+        render();
+    </script>
+</body>
+</html>
